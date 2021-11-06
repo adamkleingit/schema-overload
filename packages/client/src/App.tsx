@@ -1,19 +1,15 @@
-import { GetCarsResponseSchema, GetCarsResponseType } from "common";
 import Ajv from "ajv/dist/jtd";
+import { ajv, GetCarsResponseSchema, GetCarsResponseType } from "common";
 import { useQuery } from "react-query";
 import "./App.css";
-
-const ajv = new Ajv();
-const parse = ajv.compileParser<GetCarsResponseType>(GetCarsResponseSchema);
 
 async function fetchCars() {
   const response = await fetch("http://localhost:3333/cars");
   const data = await response.json();
-  const cars = parse(data);
-  if (!cars) {
-    throw new Error("Error parsing cars");
-  }
-  return cars;
+  return data.map((car: any) => ({
+    ...car,
+    manufactureDate: new Date(car.manufactureDate),
+  }));
 }
 
 function useCars() {
@@ -33,18 +29,22 @@ function App() {
     }
     return (
       <table>
-        <tr>
-          <th>Body Type</th>
-          <th>Manufacturer</th>
-          <th>Date</th>
-        </tr>
-        {cars?.map((car) => (
-          <tr key={car.id}>
-            <td>{car.bodyType}</td>
-            <td>{car?.manufacturer?.name}</td>
-            <td>{car.manufactureDate.getTime()}</td>
+        <thead>
+          <tr>
+            <th>Body Type</th>
+            <th>Manufacturer</th>
+            <th>Date</th>
           </tr>
-        ))}
+        </thead>
+        <tbody>
+          {cars?.map((car) => (
+            <tr key={car.id}>
+              <td>{car.bodyType}</td>
+              <td>{car?.manufacturer?.name}</td>
+              <td>{car.manufactureDate.toLocaleDateString()}</td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     );
   }

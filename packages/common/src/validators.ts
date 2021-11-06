@@ -1,5 +1,5 @@
 import addFormats from "ajv-formats";
-import Ajv from "ajv/dist/2019";
+import Ajv from "ajv/dist/jtd";
 
 //--------------------------------------------------------------------------------------------
 //
@@ -24,4 +24,4 @@ export const ajv = addFormats(new Ajv({}), [
   "regex",
 ])
   .addKeyword("kind")
-  .addKeyword("modifier");
+  .addKeyword("modifier") as Ajv;
