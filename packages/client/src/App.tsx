@@ -1,16 +1,7 @@
-import Ajv from "ajv/dist/jtd";
-import { ajv, GetCarsResponseSchema, GetCarsResponseType } from "common";
+import { GetCarsResponseType } from "common";
 import { useQuery } from "react-query";
+import { fetchCars } from "./api.utils";
 import "./App.css";
-
-async function fetchCars() {
-  const response = await fetch("http://localhost:3333/cars");
-  const data = await response.json();
-  return data.map((car: any) => ({
-    ...car,
-    manufactureDate: new Date(car.manufactureDate),
-  }));
-}
 
 function useCars() {
   const { data: cars, isLoading } = useQuery<GetCarsResponseType>(
